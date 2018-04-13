@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<property name="LOGS_PATH" value="logs/" />
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+	    <layout class="ch.qos.logback.classic.PatternLayout">
+	        <Pattern>
+	        	%d{dd-MM-yyyy HH:mm:ss.SSS} %cyan([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n
+	        </Pattern>
+	    </layout>
+	</appender>
+
+	<appender name="FILE"
+	    class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>${LOGS_PATH}sistemaEscolar_log.log</file>
+	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	        <Pattern>
+	            %d{dd-MM-yyyy HH:mm:ss.SSS} %cyan([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n
+	        </Pattern>
+	    </encoder>
+	
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	        <!-- rollover daily -->
+	        <fileNamePattern>${LOGS_PATH}sistemaEscolar_log.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+	        <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+	            <maxFileSize>10MB</maxFileSize>
+	        </timeBasedFileNamingAndTriggeringPolicy>
+	    </rollingPolicy>
+	</appender>
+	
+	<appender name="FILE-AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>${LOGS_PATH}sistemaEscolar_audit.log</file>
+	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	        <Pattern>
+	           %d{dd-MM-yyyy HH:mm:ss.SSS} %cyan([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n
+	        </Pattern>
+	    </encoder>
+	
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	        <!-- rollover daily -->
+	        <fileNamePattern>${LOGS_PATH}sistemaEscolar_audit.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+	        <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+	            <maxFileSize>10MB</maxFileSize>
+	        </timeBasedFileNamingAndTriggeringPolicy>
+	    </rollingPolicy>
+	</appender>
+	
+	<appender name="TIMES-LOGS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>${LOGS_PATH}sistemaEscolar_times.log</file>
+	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	        <Pattern>
+	           %d{dd-MM-yyyy HH:mm:ss.SSS} %cyan([%thread]) - %msg%n
+	        </Pattern>
+	    </encoder>
+	
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	        <!-- rollover daily -->
+	        <fileNamePattern>${LOGS_PATH}sistemaEscolar_times.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+	        <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+	            <maxFileSize>10MB</maxFileSize>
+	        </timeBasedFileNamingAndTriggeringPolicy>
+	    </rollingPolicy>
+	</appender>
+	
+	<appender name="USER-TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>${LOGS_PATH}sistemaEscolar_userTrace.log</file>
+	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	        <Pattern>
+	           %d{dd-MM-yyyy HH:mm:ss.SSS} %cyan([%thread]) - %msg%n
+	        </Pattern>
+	    </encoder>
+	
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	        <!-- rollover daily -->
+	        <fileNamePattern>${LOGS_PATH}sistemaEscolar_userTrace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+	        <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+	            <maxFileSize>10MB</maxFileSize>
+	        </timeBasedFileNamingAndTriggeringPolicy>
+	    </rollingPolicy>
+	</appender>
+	
+	<logger name="user-trace-log" level="info" additivity="false">
+	    <appender-ref ref="USER-TRACE" />
+	</logger>
+	
+	<logger name="times-log" level="info" additivity="false">
+	    <appender-ref ref="TIMES-LOGS" />
+	</logger>
+
+	<logger name="audit-log" level="info" additivity="false">
+	    <appender-ref ref="FILE-AUDIT" />
+	    <appender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="info">
+	    <appender-ref ref="FILE" />
+	    <appender-ref ref="STDOUT" />
+	</root>
+
+</configuration>
