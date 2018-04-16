@@ -17,6 +17,7 @@ public class Constantes {
 	public final static String UID = "uid";
 	public final static String USUARIO_SESION = "usuarioSesion";
 	public final static String FORMATO_FECHA_DDMMYYYY = "dd/MM/yyyy";
+	public final static String FORMATO_FECHA_DDMMYYYY_HHMMSS = "dd/MM/yyyy HH:mm:ss";
 	
 	public final static String ESTADO_ACTIVO = "activo";
 	public final static String ESTADO_ACTIVO_ETIQUETA = "Activo";
@@ -50,5 +51,9 @@ public class Constantes {
 	public final static String USUARIO_SESSION_ID = "idUsuario";
 	public final static String COMPANIA_SESSION_ID = "companiaActual";
 	public final static String ROL_SESSION_ID = "rolActual";
+	
+	//ALERT STATUS
+	public final static String ALERT_ENVIADO = "enviado";
+	public final static String ALERT_VISTO = "visto";
 
 }

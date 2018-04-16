@@ -1,6 +1,7 @@
 package com.agonzales.SistemaEscolar.repository;
 
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -19,5 +20,14 @@ public interface UsuarioRepository extends PagingAndSortingRepository<Usuario, I
 	
 	@Query("SELECT COUNT(e) FROM Usuario e WHERE e.username =:username AND e.id <> :id")
 	int countByUsernameAndId(@Param("username") String username, @Param("id") Integer id);
+	
+	boolean existsByUsernameAndIdNot(String username, Integer id);
+	
+	@Modifying
+	@Query("UPDATE Usuario SET bloqueado = false WHERE id =:id")
+	void unblockUserById(@Param("id") Integer id);
+	
+	@Query(value="SELECT username FROM Usuario WHERE id =:id", nativeQuery = true)
+	String getUsernameById(@Param("id")Integer id);
 
 }

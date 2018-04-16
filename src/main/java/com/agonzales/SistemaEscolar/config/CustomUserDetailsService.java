@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,8 +23,10 @@ import com.agonzales.SistemaEscolar.domain.Rol;
 import com.agonzales.SistemaEscolar.domain.Usuario;
 import com.agonzales.SistemaEscolar.repository.UsuarioRepository;
 
-@Service
+@Service("userDetailsService")
 public class CustomUserDetailsService implements UserDetailsService{
+	
+	private static final Logger LOG = LoggerFactory.getLogger(CustomUserDetailsService.class);
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -35,16 +39,20 @@ public class CustomUserDetailsService implements UserDetailsService{
 		if(usuario == null){
 			throw new UsernameNotFoundException("No se encontró el usuario " + username);
 		}
-		
-		System.out.println("Username: " + usuario.getUsername());
-		System.out.println("Usuario Activo: " + usuario.isActivo());
-		System.out.println("Usuario No Expirado: " + !usuario.isUsuarioExpirado());
-		System.out.println("Usuario No Bloqueado: " + !usuario.isBloqueado());
 
-		return new User(
+		LOG.info("Username: " + usuario.getUsername());
+		LOG.info("Usuario Activo: " + usuario.isActivo());
+		LOG.info("Usuario No Expirado: " + !usuario.isUsuarioExpirado());
+		LOG.info("Usuario No Bloqueado: " + !usuario.isBloqueado());
+		LOG.info("Usuario Roles Asignados: " + usuario.haveActiveRoles());
+
+		User user = new User(
 				username, usuario.getPassword(), usuario.isActivo(),
-				!usuario.isUsuarioExpirado(), true, !usuario.isBloqueado(),
+				!usuario.isUsuarioExpirado(), usuario.haveActiveRoles(), !usuario.isBloqueado(),
 				getAuthorities(usuario.getRolPorDefecto()));
+		
+		
+		return user; 
 
 	}
 
@@ -60,9 +68,8 @@ public class CustomUserDetailsService implements UserDetailsService{
 	public Collection<? extends GrantedAuthority> getAuthorities(Rol rol) {
 		List<GrantedAuthority> authList = getGrantedAuthorities(getPrivilegios(rol));
 
-		System.out.println("Rol: " + rol.getNombre());
 		for(GrantedAuthority a: authList) {
-			System.out.println("	" + a.getAuthority());
+			LOG.info("	" + a.getAuthority());
 		}
 		return authList;
 	}
@@ -71,6 +78,7 @@ public class CustomUserDetailsService implements UserDetailsService{
         List<String> privilegios = new ArrayList<String>();
         List<Privilegio> collection = new ArrayList<Privilegio>();
         if(rol != null){
+        	LOG.info("Rol: " + rol.getNombre());
             collection.addAll(rol.getPrivilegios());  
             
             for (Privilegio item : collection) {

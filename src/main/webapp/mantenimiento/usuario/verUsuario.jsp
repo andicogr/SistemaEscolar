@@ -42,7 +42,6 @@
 					</div>
 					<div class="col-md-4 col-sm-4 col-xs-4 text-center">
 						<c:if test="${not empty usuario}">
-							<button class="btn btn-default" data-toggle="confirmation" id="btnImprimirRegistro">Imprimir</button>
 							<sec:authorize access="hasAnyAuthority('PRIV_ADMIN', 'USUARIOS_DESBLOQUEAR', 'USUARIOS_ELIMINAR')">
 			                    <div class="btn-group botonOpcionesMantenimiento">
 			                    	<button data-toggle="dropdown" class="btn btn-default dropdown-toggle " type="button" aria-expanded="false">
@@ -52,7 +51,7 @@
 			                    	<ul role="menu" class="dropdown-menu">
 			                    		<sec:authorize access="hasAnyAuthority('PRIV_ADMIN', 'USUARIOS_DESBLOQUEAR')">
 				                      		<li>
-				                      			<a href="#">Desbloquear Usuario</a>
+				                      			<a href="javascript:;" id="btnDesbloquearUsuario">Desbloquear Usuario</a>
 				                      		</li>
 				                      	</sec:authorize>
 				                      	<sec:authorize access="hasAnyAuthority('PRIV_ADMIN', 'USUARIOS_ELIMINAR')">
@@ -121,7 +120,7 @@
 						<div class="col-md-3 col-sm-3 col-xs-12 form-div-general">
 						
 							<label>Bloqueado</label>
-							<div>
+							<div class="div-readonly">
 							  <div class="btn-group" data-toggle="buttons">
 								<label class="btn btn-default <c:if test="${usuario.bloqueado == true}">active</c:if>"
 									data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">

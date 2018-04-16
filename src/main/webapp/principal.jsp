@@ -167,6 +167,7 @@
 	<script src="resources/scripts/general.js"></script>
     <script src="resources/scripts/menu.js"></script>
     <script src="resources/scripts/topNavBar.js"></script>
+	<script src="resources/vendors/livestamp/livestamp.min.js"></script>
     
   </body>
 </html>

@@ -258,7 +258,6 @@ function eliminarRegistrosSeleccionadosDeDataTable(dataTableId, urlEliminar, url
 	}
 }
 
-
 function aplicarReglasDeValidacionFormulario(reglasValidacion, mensajesValidacion){
 	$form.validate({
 		onkeyup: function (element) {

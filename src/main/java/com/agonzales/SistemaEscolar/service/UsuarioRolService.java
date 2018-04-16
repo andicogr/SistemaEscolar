@@ -79,6 +79,7 @@ public class UsuarioRolService {
 		return retorno;
 	}
 	
+	@Transactional
 	public Map<String, Object> delete(Integer[] ids){
 		Map<String, Object> retorno = new HashMap<String, Object>();
 		Map<String, Object> notificacion = null;

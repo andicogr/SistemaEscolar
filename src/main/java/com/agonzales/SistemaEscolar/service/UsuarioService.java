@@ -87,6 +87,9 @@ public class UsuarioService {
 		Map<Integer, String> columns = new HashMap<Integer, String>();
 		columns.put(1, "username");
 		columns.put(2, "activo");
+		columns.put(3, "bloqueado");
+		columns.put(4, "expirarUsuario");
+		columns.put(5, "fechaExpiracionUsuario");
 
 		return columns.get(sortColumn);
 	}
@@ -108,7 +111,10 @@ public class UsuarioService {
 			String[] aaDato = {
 						checkbox,
 						usuario.getUsername(),
-						Util.obtenerNombreEstado(usuario.isActivo())
+						Util.obtenerNombreEstado(usuario.isActivo()),
+						usuario.isBloqueado() == true ? "Si" : "No",
+						usuario.isExpirarUsuario() == true ? "Si" : "No",
+						usuario.getFechaExpiracionUsuarioConFormato()
 					};
 			listas.add(aaDato);
 		}
@@ -207,6 +213,7 @@ public class UsuarioService {
 			actual.setActivo(usuario.isActivo());
 			actual.setExpirarUsuario(usuario.isExpirarUsuario());
 			actual.setFechaExpiracionUsuario(usuario.getFechaExpiracionUsuario());
+			actual.setBloqueado(usuario.isBloqueado());
 			
 			if(updatePassword) {
 				actual.setPassword(encodePassword(usuario.getPassword()));
@@ -272,6 +279,49 @@ public class UsuarioService {
 	@Transactional
 	private void delete(Usuario usuario) {
 		usuarioRepository.delete(usuario);
+	}
+	
+	public boolean existsByUsernameAndIdNot(String username, Integer id) {
+		return usuarioRepository.existsByUsernameAndIdNot(username, id);
+	}
+
+	public void blockUserByUsername(String username) {
+		Usuario usuario = usuarioRepository.findByUsername(username);
+		usuario.setBloqueado(true);
+		this.update(usuario);
+	}
+	
+	@Transactional
+	public Map<String, Object> desbloquearUsuarios(Integer[] ids){
+		Map<String, Object> retorno = null;
+		Map<String, Object> notificacion = null;
+		boolean estadoDesbloqueo = true;
+		Integer idUsuario = 0;
+		
+		String textoNotificacion = "El usuario se desbloqueo correctamente";
+		if(ids.length > 1){
+			textoNotificacion = "Los usuarios se desbloquearon correctamente";
+		}
+		notificacion = Util.crearNotificacionInfo("Informacion", textoNotificacion);
+
+		for(Integer id: ids) {
+			try {
+				usuarioRepository.unblockUserById(id);
+				idUsuario = id;
+			} catch (DataAccessException dataAccessException) {
+				String titleError = "Error al intentar desbloquear el Usuario " + 
+						usuarioRepository.getUsernameById(id);
+				notificacion = SqlExceptionMessage.getInstance().getMessage(dataAccessException, titleError);
+				estadoDesbloqueo = false;
+			}
+		}
+		
+		retorno = new HashMap<String, Object>();
+		retorno.put("notificacion", notificacion);
+		retorno.put("estado", estadoDesbloqueo);
+		retorno.put("id", idUsuario);
+
+		return retorno;
 	}
 
 }

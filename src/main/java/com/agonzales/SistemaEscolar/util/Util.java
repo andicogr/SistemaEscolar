@@ -103,6 +103,27 @@ public class Util {
 		return false;
 	}
 	
+	public static String formatDateTime(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constantes.FORMATO_FECHA_DDMMYYYY_HHMMSS);
+		return simpleDateFormat.format(date);
+	}
+	
+	public static String formatDate(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constantes.FORMATO_FECHA_DDMMYYYY);
+		return simpleDateFormat.format(date);
+	}
+	
+	public static Date formatDateHTML(String fechaHtml) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constantes.FORMATO_FECHA_DDMMYYYY);
+		Date fechaFormateada = null;
+		try {
+			fechaFormateada = simpleDateFormat.parse(fechaHtml);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return fechaFormateada;
+	}
+	
 	public static String query(List<Map<String, Object>> lista) {
 		String query = "";
 		for (Map<String, Object> map : lista) {

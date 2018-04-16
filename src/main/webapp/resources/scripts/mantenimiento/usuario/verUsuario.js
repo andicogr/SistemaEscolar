@@ -27,16 +27,40 @@ $('#fechaExpiracionUsuario').daterangepicker({
 
 capturarDatosInicialesDelFormulario();
 
+$.validator.addMethod("regxUsername", function(value, element) {          
+    return this.optional(element) || /^[A-Za-z0-9]+(?:[_-][A-Za-z0-9]+)*$/.test(value);
+}, "Por favor usa letras (a-z), números o guion");
+
 var reglasValidacion = {
-				'username': {required: true, maxlength: 20, minlength: 5},
+				'username': {
+					required: true, 
+					maxlength: 20, 
+					minlength: 5,
+		            remote: {
+		            	url: "/mantenimiento/usuario/exists/username",
+		            	type: "GET",
+		            	data: {
+		            		id: function(){
+		            			var idRegistro = $("#id").val();
+		            			if(idRegistro == null){
+		            				idRegistro = 0;
+		            			}
+		            			return idRegistro;
+		            		}
+		            	}
+		            },
+		            regxUsername: true
+				},
 				'password': {required: true, maxlength: 20, minlength: 5}
-			};
+};
 
 var mensajesValidacion = {
 		'username': {
 				required: "Este valor es requerido",
 				maxlength: $.validator.format("Please, at least {0} characters are necessary"),
-				minlength: $.validator.format("Please, at least {0} characters are necessary")
+				minlength: $.validator.format("Please, at least {0} characters are necessary"),
+				remote: "El nombre de usuario ya existe!!",
+				regxUsername: "Por favor usa letras (a-z), números o guion"
 		},
 		'password': {
 				required: "Este valor es requerido",
@@ -46,7 +70,6 @@ var mensajesValidacion = {
 };
 
 aplicarReglasDeValidacionFormulario(reglasValidacion, mensajesValidacion);
-
 
 $("#botonRegistrar").click(function() {
 	enviarFormulario("mantenimiento/usuario/guardar");
@@ -106,8 +129,17 @@ function btnEliminarRegistro(){
 	}
 }
 
-$("#btnImprimirRegistro").click(function(){
-	console.log($("#id").val());
+$("#btnDesbloquearUsuario").click(function(){
+	$.get(baseURL + "mantenimiento/usuario/desbloquearUsuario?ids=" + [$("#id").val()], 
+		function(retorno){
+			if(retorno['notificacion'] != null){
+				new PNotify(retorno['notificacion']);
+			}
+				
+			if(eval(retorno['estado']) == true){
+				cargarDivContenidoPrincipal("mantenimiento/usuario/ver?id=" + retorno['id']);
+			}
+	});
 });	
 
 function showDivFechaExpiracionUsuario(){

@@ -49,24 +49,17 @@
 
 				<p class="message" style="color:#F00">
 			        <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION.message}">
-			        	<c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message=='User is disabled'}">
-				            ${fn:replace(SPRING_SECURITY_LAST_EXCEPTION.message, 'User is disabled', 'El usuario esta deshabilitado')}
-				        </c:if>
-				        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message=='Bad credentials'}">
-				            ${fn:replace(SPRING_SECURITY_LAST_EXCEPTION.message, 'Bad credentials', 'Usuario/Clave son incorrectos')}
-				        </c:if>
-				        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message=='Maximum sessions of 1 for this principal exceeded'}">
-				            ${fn:replace(SPRING_SECURITY_LAST_EXCEPTION.message, 'Maximum sessions of 1 for this principal exceeded', 'Esta cuenta ya esta siendo usada por alguien.')}
-				        </c:if>
-				        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message=='User account has expired'}">
-				            ${fn:replace(SPRING_SECURITY_LAST_EXCEPTION.message, 'User account has expired', 'La cuenta de usuario ha expirado.')}
-				        </c:if>
-				        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message=='User credentials have expired'}">
-				            ${fn:replace(SPRING_SECURITY_LAST_EXCEPTION.message, 'User credentials have expired', 'Las credenciales de usuario han caducado.')}
-				        </c:if>
-				        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message=='User account is locked'}">
-				            ${fn:replace(SPRING_SECURITY_LAST_EXCEPTION.message, 'User account is locked', 'La cuenta de usuario está bloqueada.')}
-				        </c:if>
+			        	<c:choose>
+					        <c:when test="${SPRING_SECURITY_LAST_EXCEPTION.message=='Maximum sessions of 1 for this principal exceeded'}">
+					            Esta cuenta ya est&aacute; siendo usada por alguien Custom
+					        </c:when>
+					        <c:when test="${SPRING_SECURITY_LAST_EXCEPTION.message=='Bad credentials'}">
+					            Usuario y/o Clave incorrectos
+					        </c:when>
+					        <c:otherwise>
+					            ${SPRING_SECURITY_LAST_EXCEPTION.message}
+					        </c:otherwise>
+					    </c:choose>
 				        <c:remove scope="session" var="SPRING_SECURITY_LAST_EXCEPTION"/>
 			        </c:if>   
 				</p>

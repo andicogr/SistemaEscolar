@@ -17,6 +17,7 @@ import com.agonzales.SistemaEscolar.util.VariablesSession;
 @Configuration
 public class UserLogAspect {
 	
+	private Logger LOG = LoggerFactory.getLogger(UserLogAspect.class);
 	private Logger TIMES_LOG = LoggerFactory.getLogger("times-log");
 	private Logger USER_TRACE_LOG = LoggerFactory.getLogger("user-trace-log");
 	
@@ -26,7 +27,9 @@ public class UserLogAspect {
 		if(username != null) {
 			USER_TRACE_LOG.info("Username: " + username + " > " + joinPoint.getSignature());
 		}
-		
+
+		LOG.info(joinPoint.getSignature().toString());
+
 	}
 
 	@Around("execution(* *(..)) && @annotation(Loggable)")

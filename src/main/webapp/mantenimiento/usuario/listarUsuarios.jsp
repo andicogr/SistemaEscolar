@@ -87,7 +87,6 @@
 							</div>
 							<div class="col-md-6 col-sm-6 col-xs-6 text-center">
 								<div id="botoneraCentro" style="display: none">
-									<button class="btn btn-default" data-toggle="confirmation" id="btnImprimirRegistro">Imprimir</button>
 									<sec:authorize access="hasAnyAuthority('PRIV_ADMIN', 'USUARIOS_DESBLOQUEAR', 'USUARIOS_ELIMINAR')">
 					                    <div class="btn-group botonOpcionesMantenimiento">
 					                    	<button data-toggle="dropdown" class="btn btn-default dropdown-toggle " type="button" aria-expanded="false">
@@ -97,7 +96,7 @@
 					                    	<ul role="menu" class="dropdown-menu">
 					                    		<sec:authorize access="hasAnyAuthority('PRIV_ADMIN', 'USUARIOS_DESBLOQUEAR')">
 						                      		<li>
-						                      			<a href="#">Desbloquear Usuario</a>
+						                      			<a href="javascript:;" id="btnDesbloquearUsuario">Desbloquear Usuario</a>
 						                      		</li>
 						                      	</sec:authorize>
 						                      	<sec:authorize access="hasAnyAuthority('PRIV_ADMIN', 'USUARIOS_ELIMINAR')">
@@ -123,8 +122,11 @@
 					<thead>
 						<tr>
 							<th><input type="checkbox" id="checkBoxAll" onclick="seleccionarTodosLosCehckBoxDeDataTable();" class="flat"/></th>
-							<th>Username</th>
+							<th>Usuario</th>
 							<th>Estado</th>
+							<th>Bloqueado</th>
+							<th>¿Expirar?</th>
+							<th>Fecha de Expiraci&oacute;n</th>
                         </tr>
 					</thead>
 					<tbody>

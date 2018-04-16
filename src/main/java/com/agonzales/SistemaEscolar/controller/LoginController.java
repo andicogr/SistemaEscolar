@@ -27,5 +27,15 @@ public class LoginController {
  	public String error(Model model) {
 		return "404";
 	}
+    
+    @GetMapping("/expiredSession")
+    public String expiredSession() {
+        return "expiredSession";
+    }
+    
+    @GetMapping("/invalidSession")
+    public String invalidSession() {
+        return "invalidSession";
+    }
 
 }

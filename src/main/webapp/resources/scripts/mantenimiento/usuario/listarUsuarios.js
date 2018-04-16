@@ -3,6 +3,9 @@ var aoColumns = [
                  { "width": "1px" },
                  { sClass: "center" },
                  { sClass: "center" },
+                 { sClass: "center" },
+                 { sClass: "center" },
+                 { sClass: "center" },
              ];
 
 cargarConfiguracionDataTable("dataTableLista", "mantenimiento/usuario/listaJson", aoColumns, "mantenimiento/usuario/ver?id=");
@@ -15,9 +18,19 @@ function btnEliminarRegistro(){
 	eliminarRegistrosSeleccionadosDeDataTable("dataTableLista", "mantenimiento/usuario/eliminar?ids=", "mantenimiento/usuario/listar");
 }
 
-$("#btnImprimirRegistro").click(function(){
+$("#btnDesbloquearUsuario").click(function(){
     var selectedIds = obtenerCheckBoxSeleccionadosDeDataTable();
     console.log(selectedIds);
+	$.get(baseURL + "mantenimiento/usuario/desbloquearUsuario?ids=" + selectedIds, 
+			function(retorno){
+				if(retorno['notificacion'] != null){
+					new PNotify(retorno['notificacion']);
+				}
+					
+				if(eval(retorno['estado']) == true){
+					cargarDivContenidoPrincipal("mantenimiento/usuario/listar");
+				}
+		});
 });
 
 

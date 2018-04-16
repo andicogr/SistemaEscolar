@@ -38,7 +38,7 @@ public class Usuario extends EntidadAuditoria{
 	@Column(length=20, nullable=false)
 	private String password;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="usuario", cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy="usuario", cascade=CascadeType.REMOVE)
 	private List<UsuarioRol> roles;
 	
 	private boolean activo;
@@ -122,7 +122,7 @@ public class Usuario extends EntidadAuditoria{
 	public Rol getRolPorDefecto(){
 		Rol rol = null;
 		if(this.rolPorDefecto == null){
-			List<Rol> roles = getRolesActivos();
+			List<Rol> roles = getActiveRoles();
 			if(!roles.isEmpty()){
 				rol = roles.get(0);
 			}
@@ -136,33 +136,28 @@ public class Usuario extends EntidadAuditoria{
 		this.rolPorDefecto = rolPorDefecto;
 	}
 
-	public boolean isRolesActivos(){
-		for(UsuarioRol rol : getRoles()){
-			if(rol.isUsuarioRolYRolActivo()){
-				return true;
-			}
-		}
-		return false;
+	public boolean haveActiveRoles(){
+		return !getActiveRoles().isEmpty();
 	}
 
 	public boolean isUsuarioExpirado(){
-		if(isExpirarUsuario() && getFechaExpiracionUsuario().compareTo(new Date()) > 0){
+		if(isExpirarUsuario() && getFechaExpiracionUsuario().compareTo(new Date()) < 0){
 			return true;
 		}
 		return false;
 	}
 
-	public List<Rol> getRolesActivos(){
-		List<Rol> listaRolesActivos = new ArrayList<Rol>();
+	public List<Rol> getActiveRoles(){
+		List<Rol> listActiveRoles = new ArrayList<Rol>();
 		for(UsuarioRol usuarioRol : getRoles()){
 			if(usuarioRol.isUsuarioRolYRolActivo()){
-				listaRolesActivos.add(usuarioRol.getRol());
+				listActiveRoles.add(usuarioRol.getRol());
 			}
 		}
-		return listaRolesActivos;
+		return listActiveRoles;
 	}
 	
-	public Date getFechaExpiracionUsuarioValidandoNull(){
+	public Date getFechaExpiracionUsuarioNotNull(){
 		if(getFechaExpiracionUsuario() != null){
 			return getFechaExpiracionUsuario();
 		}
@@ -170,9 +165,12 @@ public class Usuario extends EntidadAuditoria{
 	}
 	
 	public String getFechaExpiracionUsuarioConFormato(){
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constantes.FORMATO_FECHA_DDMMYYYY);
-		String fechaFormateada = simpleDateFormat.format(getFechaExpiracionUsuarioValidandoNull());
-		return fechaFormateada;
+		if(expirarUsuario) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constantes.FORMATO_FECHA_DDMMYYYY);
+			String fechaFormateada = simpleDateFormat.format(getFechaExpiracionUsuarioNotNull());
+			return fechaFormateada;
+		}
+		return "";
 	}
 
 	public Usuario() {
@@ -188,7 +186,7 @@ public class Usuario extends EntidadAuditoria{
 	public String toString() {
 		return "Usuario [" + (id != null ? "id=" + id + ", " : "")
 				+ (username != null ? "username=" + username + ", " : "")
-				+ (password != null ? "password=" + password + ", " : "") + "activo=" + activo + ", bloqueado="
+				+ (password != null ? "password=" + "[PROTECTED]" + ", " : "") + "activo=" + activo + ", bloqueado="
 				+ bloqueado + ", expirarUsuario=" + expirarUsuario + ", "
 				+ (fechaExpiracionUsuario != null ? "fechaExpiracionUsuario=" + fechaExpiracionUsuario + ", " : "")
 				+ (rolPorDefecto != null ? "rolPorDefecto=" + rolPorDefecto : "") + "]";
